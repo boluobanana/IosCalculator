@@ -23,8 +23,25 @@ class ViewController: UIViewController {
         } else {
             display.text = display.text! + digit
         }
+    }
+    
+    var operandStack = Array<Double>()
+    
+    @IBAction func enter() {
+        isTheFirstNumber = true;
+        operandStack.append(displayValue)
+        print("operandStack = \(operandStack)")
         
-        
+    }
+    
+    var displayValue: Double {
+        get {
+            return (display.text! as NSString).doubleValue
+        }
+        set {
+            display.text = "\(newValue)"
+            isTheFirstNumber = true;
+        }
     }
 }
 
