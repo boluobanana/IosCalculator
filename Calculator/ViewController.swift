@@ -25,6 +25,28 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func operate(_ sender: UIButton) {
+        let operation = sender.currentTitle!
+        if !isTheFirstNumber {
+            enter()
+        }
+        switch operation {
+        case "×": ferformOperation { $0 * $1 }
+        case "÷": ferformOperation { $1 / $0 }
+        case "+": ferformOperation { $0 + $1 }
+        case "-": ferformOperation { $1 - $0 }
+        default:
+            break
+        }
+    }
+
+    func ferformOperation(operation: (Double, Double) -> Double) {
+        if operandStack.count >= 2 {
+            displayValue = operation(operandStack.removeLast(), operandStack.removeLast())
+            enter()
+        }
+        
+    }
     var operandStack = Array<Double>()
     
     @IBAction func enter() {
@@ -33,7 +55,7 @@ class ViewController: UIViewController {
         print("operandStack = \(operandStack)")
         
     }
-    
+
     var displayValue: Double {
         get {
             return (display.text! as NSString).doubleValue
