@@ -35,6 +35,7 @@ class ViewController: UIViewController {
         case "÷": ferformOperation { $1 / $0 }
         case "+": ferformOperation { $0 + $1 }
         case "-": ferformOperation { $1 - $0 }
+        case "√": ferformOperationSingle { sqrt($0) }
         default:
             break
         }
@@ -45,8 +46,15 @@ class ViewController: UIViewController {
             displayValue = operation(operandStack.removeLast(), operandStack.removeLast())
             enter()
         }
-        
     }
+    
+    func ferformOperationSingle(operation: (Double) -> Double) {
+        if operandStack.count >= 1 {
+            displayValue = operation(operandStack.removeLast())
+            enter()
+        }
+    }
+    
     var operandStack = Array<Double>()
     
     @IBAction func enter() {
