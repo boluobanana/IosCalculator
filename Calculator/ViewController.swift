@@ -14,6 +14,8 @@ class ViewController: UIViewController {
     
     var isTheFirstNumber: Bool = true;
     
+    var brain = CalculatorBrain()
+
     @IBAction func appednDigit(_ sender: UIButton) {
         let digit = sender.currentTitle!
         
@@ -26,42 +28,26 @@ class ViewController: UIViewController {
     }
     
     @IBAction func operate(_ sender: UIButton) {
-        let operation = sender.currentTitle!
+        
         if !isTheFirstNumber {
             enter()
         }
-        switch operation {
-        case "×": ferformOperation { $0 * $1 }
-        case "÷": ferformOperation { $1 / $0 }
-        case "+": ferformOperation { $0 + $1 }
-        case "-": ferformOperation { $1 - $0 }
-        case "√": ferformOperationSingle { sqrt($0) }
-        default:
-            break
+        if let operation = sender.currentTitle {
+            if let result = brain.performeOperaion(symbol: operation) {
+                displayValue = result
+            } else {
+                displayValue = 0
+            }
         }
     }
-
-    func ferformOperation(operation: (Double, Double) -> Double) {
-        if operandStack.count >= 2 {
-            displayValue = operation(operandStack.removeLast(), operandStack.removeLast())
-            enter()
-        }
-    }
-    
-    func ferformOperationSingle(operation: (Double) -> Double) {
-        if operandStack.count >= 1 {
-            displayValue = operation(operandStack.removeLast())
-            enter()
-        }
-    }
-    
-    var operandStack = Array<Double>()
     
     @IBAction func enter() {
         isTheFirstNumber = true;
-        operandStack.append(displayValue)
-        print("operandStack = \(operandStack)")
-        
+        if let result = brain.pushOperand(operand: displayValue) {
+            displayValue = result
+        } else {
+            displayValue = 0
+        }
     }
 
     var displayValue: Double {

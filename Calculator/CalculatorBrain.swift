@@ -10,10 +10,23 @@ import Foundation
 
 class CalculatorBrain {
     
-    private enum Op {
+    private enum Op: CustomStringConvertible{
         case Operand(Double)
         case UnaryOperation(String, (Double) -> Double)
         case BinaryOperation(String, (Double, Double) -> Double)
+        
+        var description: String {
+            get {
+                switch self {
+                case .Operand(let operand):
+                    return "\(operand)"
+                case .UnaryOperation(let symbol, _):
+                    return symbol
+                case .BinaryOperation(let symbol, _):
+                    return symbol
+                }
+            }
+        }
     }
     
     private var opStack = [Op]()
@@ -29,6 +42,7 @@ class CalculatorBrain {
     }
     
    private func evaluate(ops: [Op]) -> (result: Double?, reminingOps: [Op]) {
+    
         if !ops.isEmpty {
             var reminingOps = ops
             let op = reminingOps.removeLast()
@@ -56,15 +70,18 @@ class CalculatorBrain {
     
     func evaluate() -> Double?  {
         let (result, remainder) = evaluate(ops: opStack)
+        print("\(opStack) = \(String(describing: result)) with \(remainder) left over")
         return result
     }
-    func pushOperand(operand: Double) {
+    func pushOperand(operand: Double) -> Double? {
         opStack.append(Op.Operand(operand))
+        return evaluate()
     }
     
-    func performeOperaion(symbol: String) {
+    func performeOperaion(symbol: String) -> Double? {
         if let operation = knowOps[symbol] {
             opStack.append(operation)
         }
+        return evaluate()
     }
 }
